@@ -112,14 +112,16 @@ function startSequence() {
   song.currentTime = 0;
   song.play().catch(() => {});
 
-  // "sblocca" gli applausi ora (col tocco) così partiranno dopo senza essere bloccati
+  // "sblocca" gli applausi ora (col tocco) in MUTO: iOS ignora volume=0 ma rispetta muted,
+  // così non si sente nessun applauso anticipato durante la canzone
   try {
-    applause.volume = 0;
+    applause.muted = true;
     applause.play().then(() => {
       applause.pause();
       applause.currentTime = 0;
+      applause.muted = false;
       applause.volume = 0.8;
-    }).catch(() => {});
+    }).catch(() => { applause.muted = false; });
   } catch (e) {}
 
   setupMic(); // chiede il microfono ora (gesto utente); soffio attivo solo da "ready"
@@ -145,7 +147,7 @@ function blowOut() {
   if (state !== "ready") return;
   state = "done";
   // applausi SUBITO (nello stesso gesto del tocco → non vengono bloccati) 👏
-  try { applause.currentTime = 0; applause.volume = 0.8; applause.play().catch(() => {}); } catch (e) {}
+  try { applause.muted = false; applause.currentTime = 0; applause.volume = 0.8; applause.play().catch(() => {}); } catch (e) {}
   blowCue.classList.remove("show");
   candles.forEach((c, i) => setTimeout(() => c.classList.add("out"), i * 180));
   stopMic();
