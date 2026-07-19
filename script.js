@@ -211,13 +211,39 @@ const cdSecs = document.getElementById("cd-secs");
 const cdGrid = document.getElementById("countdown");
 const cdArrived = document.getElementById("cd-arrived");
 const openGiftBtn = document.getElementById("open-gift");
+const confettiCanvas = document.getElementById("confetti");
+const balloonsLayer = document.getElementById("balloons");
 let cdInterval = null;
 
 function pad2(n) { return String(n).padStart(2, "0"); }
 
+// crea i palloncini (sfondo del solo countdown)
+function initBalloons() {
+  if (!balloonsLayer || balloonsLayer.childElementCount) return;
+  const COL = ["#ff6b6b", "#4d96ff", "#ffd166", "#2fd699", "#ff8fab", "#c77dff"];
+  const N = 14;
+  for (let i = 0; i < N; i++) {
+    const b = document.createElement("div");
+    b.className = "balloon";
+    const c = COL[i % COL.length];
+    b.style.background = "radial-gradient(circle at 35% 30%, rgba(255,255,255,.55), " + c + " 62%)";
+    const size = 34 + Math.random() * 30;
+    b.style.width = size + "px";
+    b.style.height = size * 1.25 + "px";
+    b.style.left = Math.random() * 96 + "vw";
+    const dur = 9 + Math.random() * 8;
+    b.style.animationDuration = dur + "s";
+    b.style.animationDelay = -Math.random() * dur + "s"; // alcuni già a metà salita
+    balloonsLayer.appendChild(b);
+  }
+}
+
 function goToCake() {
   countdownStage.classList.add("hidden");
   stageCake.classList.remove("hidden");
+  // nel countdown: palloncini; dalla torta in poi: coriandoli
+  if (balloonsLayer) balloonsLayer.style.display = "none";
+  if (confettiCanvas) confettiCanvas.style.display = "";
 }
 
 function showGiftButton() {
@@ -247,6 +273,10 @@ openGiftBtn.addEventListener("click", goToCake);
 if (new Date() >= BIRTHDAY) {
   goToCake();
 } else {
+  // nel countdown mostriamo i palloncini al posto dei coriandoli
+  initBalloons();
+  if (balloonsLayer) balloonsLayer.style.display = "block";
+  if (confettiCanvas) confettiCanvas.style.display = "none";
   tickCountdown();
   cdInterval = setInterval(tickCountdown, 1000);
 }
