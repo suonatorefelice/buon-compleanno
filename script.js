@@ -223,9 +223,9 @@ async function setupMic() {
     source.connect(analyser);
     const data = new Uint8Array(analyser.frequencyBinCount);
 
-    const BLOW_THRESHOLD = 85;  // quanto forte dev'essere il soffio (0-255): valore medio
-    const NEEDED_FRAMES  = 4;   // istanti consecutivi di soffio richiesti
-    const GRACE_MS       = 800; // dopo "Soffia!" il mic ignora l'aria per un attimo (fa comparire la scritta)
+    const BLOW_THRESHOLD = 120; // quanto forte dev'essere il soffio (0-255): serve un soffio deciso
+    const NEEDED_FRAMES  = 9;   // istanti consecutivi di soffio richiesti (~0,15s continui): scarta le folate brevi
+    const GRACE_MS       = 1000; // dopo "Soffia!" il mic ignora l'aria per un attimo (fa comparire la scritta)
     let loud = 0; // frame consecutivi "rumorosi" (evita spegnimenti accidentali)
     const listen = () => {
       analyser.getByteFrequencyData(data);
@@ -238,8 +238,8 @@ async function setupMic() {
       if (armed) {
         if (avg > BLOW_THRESHOLD) {
           if (++loud >= NEEDED_FRAMES) blowOut();
-        } else if (loud > 0) {
-          loud--;
+        } else {
+          loud = Math.max(0, loud - 3); // se il rumore cala, il contatore scende in fretta: una folata breve non basta
         }
       } else {
         loud = 0;
