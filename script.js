@@ -244,6 +244,13 @@ function goToCake() {
   // nel countdown: palloncini; dalla torta in poi: coriandoli
   if (balloonsLayer) balloonsLayer.style.display = "none";
   if (confettiCanvas) confettiCanvas.style.display = "";
+  // ricostruisci la torta con l'animazione (rimuovo e riaggiungo .build con un reflow in mezzo)
+  stageCake.classList.remove("build");
+  void stageCake.offsetWidth; // forza il reflow → l'animazione riparte da capo
+  stageCake.classList.add("build");
+  // il prompt "Tocca la torta" compare a costruzione finita
+  promptEl.classList.remove("visible");
+  setTimeout(() => { if (state === "idle") promptEl.classList.add("visible"); }, 1700);
 }
 
 function showGiftButton() {

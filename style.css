@@ -196,16 +196,21 @@ body {
   height: auto;
 }
 
-/* ===== Animazione di costruzione (all'apertura) ===== */
+/* ===== Animazione di costruzione (parte quando si apre la torta) ===== */
 .build { transform-box: fill-box; }
-.b-plate  { transform-origin: 50% 60%;  animation: growIn 0.5s ease-out both; }
-.b-bottom { transform-origin: 50% 100%; animation: riseIn 0.55s cubic-bezier(.2,.8,.3,1.2) 0.3s both; }
-.b-top    { transform-origin: 50% 100%; animation: riseIn 0.55s cubic-bezier(.2,.8,.3,1.2) 0.62s both; }
+.b-plate  { transform-origin: 50% 60%;  }
+.b-bottom { transform-origin: 50% 100%; }
+.b-top    { transform-origin: 50% 100%; }
+.b-candles .candle { transform-box: fill-box; transform-origin: 50% 100%; }
 
-.b-candles .candle { transform-box: fill-box; transform-origin: 50% 100%; animation: growUp 0.4s ease-out both; }
-.b-candles .candle:nth-child(1) { animation-delay: 0.98s; }
-.b-candles .candle:nth-child(2) { animation-delay: 1.12s; }
-.b-candles .candle:nth-child(3) { animation-delay: 1.26s; }
+/* le animazioni scattano solo quando #stage-cake ha la classe .build (aggiunta all'apertura) */
+#stage-cake.build .b-plate  { animation: growIn 0.5s ease-out both; }
+#stage-cake.build .b-bottom { animation: riseIn 0.55s cubic-bezier(.2,.8,.3,1.2) 0.3s both; }
+#stage-cake.build .b-top    { animation: riseIn 0.55s cubic-bezier(.2,.8,.3,1.2) 0.62s both; }
+#stage-cake.build .b-candles .candle { animation: growUp 0.4s ease-out both; }
+#stage-cake.build .b-candles .candle:nth-child(1) { animation-delay: 0.98s; }
+#stage-cake.build .b-candles .candle:nth-child(2) { animation-delay: 1.12s; }
+#stage-cake.build .b-candles .candle:nth-child(3) { animation-delay: 1.26s; }
 
 @keyframes growIn { from { opacity: 0; transform: scaleX(.3); } to { opacity: 1; transform: none; } }
 @keyframes riseIn { from { opacity: 0; transform: translateY(26px) scale(.9); } to { opacity: 1; transform: none; } }
