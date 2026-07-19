@@ -2,7 +2,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  /* colori preferiti di andəæ */
+  /* colori preferiti di Andrea */
   --ox: #8c1420;        /* rosso sangue di bue */
   --ox-hi: #c0392b;     /* riflesso */
   --ox-d: #5a0c15;      /* ombra */
@@ -181,8 +181,18 @@ body {
   color: var(--gold);
   text-shadow: 0 3px 20px rgba(0,0,0,.6);
 }
+.wish-sub {
+  margin-top: 22px;
+  font-family: "Poppins", system-ui, sans-serif;
+  font-size: clamp(1rem, 4.2vw, 1.25rem);
+  font-weight: 400;
+  line-height: 1.55;
+  color: rgba(255,255,255,.92);
+  text-shadow: 0 3px 18px rgba(0,0,0,.55);
+  animation: fadeUp 0.9s ease;
+}
 .replay {
-  margin-top: 44px;
+  margin-top: 34px;
   padding: 14px 30px;
   font-size: 1rem;
   font-weight: 600;

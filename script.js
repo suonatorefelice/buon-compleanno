@@ -1,5 +1,5 @@
 /* ===========================================================
-   Buon compleanno andəæ! 🎂
+   Buon compleanno Andrea! 🎂
    Flusso:
    1. la torta si costruisce (animazione CSS)
    2. "Tocca per iniziare" → parte l'AUDIO (file song.mp3)
@@ -34,6 +34,7 @@ let state = "idle";
 let timers = [];
 let micStream = null;
 let micRAF = null;
+let readyAt = 0; // istante in cui compare "Soffia!" (per la pausa di grazia del microfono)
 
 /* ---------- Coriandoli ---------- */
 const canvas = document.getElementById("confetti");
@@ -139,6 +140,7 @@ function startSequence() {
 
 function onTextDone() {
   state = "ready";
+  readyAt = performance.now();
   lyricLines.forEach((l) => l.classList.remove("current"));
   blowCue.classList.add("show");
 }
@@ -193,20 +195,45 @@ replayBtn.addEventListener("click", () => {
 async function setupMic() {
   if (micStream || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
   try {
-    micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    // niente noiseSuppression/echoCancellation: altrimenti il browser
+    // scambia il SOFFIO per rumore e lo cancella → il soffio non verrebbe rilevato
+    micStream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        echoCancellation: false,
+        noiseSuppression: false,
+        autoGainControl: false,
+      },
+    });
     const mCtx = new (window.AudioContext || window.webkitAudioContext)();
+    // dopo la richiesta permesso l'AudioContext può partire "sospeso": riattivalo
+    if (mCtx.state === "suspended") { try { await mCtx.resume(); } catch (e) {} }
     const source = mCtx.createMediaStreamSource(micStream);
     const analyser = mCtx.createAnalyser();
     analyser.fftSize = 512;
     source.connect(analyser);
     const data = new Uint8Array(analyser.frequencyBinCount);
 
+    const BLOW_THRESHOLD = 85;  // quanto forte dev'essere il soffio (0-255): valore medio
+    const NEEDED_FRAMES  = 4;   // istanti consecutivi di soffio richiesti
+    const GRACE_MS       = 800; // dopo "Soffia!" il mic ignora l'aria per un attimo (fa comparire la scritta)
+    let loud = 0; // frame consecutivi "rumorosi" (evita spegnimenti accidentali)
     const listen = () => {
       analyser.getByteFrequencyData(data);
+      // il soffio concentra energia sulle basse frequenze: guardiamo lì
+      const N = 40;
       let sum = 0;
-      for (let i = 0; i < data.length; i++) sum += data[i];
-      const avg = sum / data.length;
-      if (avg > 72 && state === "ready") blowOut();
+      for (let i = 0; i < N; i++) sum += data[i];
+      const avg = sum / N;
+      const armed = state === "ready" && performance.now() - readyAt > GRACE_MS;
+      if (armed) {
+        if (avg > BLOW_THRESHOLD) {
+          if (++loud >= NEEDED_FRAMES) blowOut();
+        } else if (loud > 0) {
+          loud--;
+        }
+      } else {
+        loud = 0;
+      }
       micRAF = requestAnimationFrame(listen);
     };
     listen();
