@@ -14,8 +14,24 @@
   <canvas id="confetti"></canvas>
 
   <main class="scene">
+    <!-- Fase 0: countdown iniziale (hype!) -->
+    <div id="stage-countdown" class="stage">
+      <p class="cd-eyebrow">Manca poco al compleanno di</p>
+      <h1 class="cd-name">Andrea</h1>
+
+      <div id="countdown" class="countdown" aria-live="off">
+        <div class="cd-unit"><span class="cd-num" id="cd-days">00</span><span class="cd-label">giorni</span></div>
+        <div class="cd-unit"><span class="cd-num" id="cd-hours">00</span><span class="cd-label">ore</span></div>
+        <div class="cd-unit"><span class="cd-num" id="cd-mins">00</span><span class="cd-label">min</span></div>
+        <div class="cd-unit"><span class="cd-num" id="cd-secs">00</span><span class="cd-label">sec</span></div>
+      </div>
+
+      <p id="cd-arrived" class="cd-arrived hidden">🎉 È arrivato il tuo giorno!</p>
+      <button id="open-gift" class="open-gift hidden">Apri il regalo 🎁</button>
+    </div>
+
     <!-- Fase 1: torta + invito -->
-    <div id="stage-cake" class="stage">
+    <div id="stage-cake" class="stage hidden">
       <!-- parole della canzone SOPRA la torta -->
       <div class="top-area">
         <div id="lyrics" class="lyrics" aria-live="polite">

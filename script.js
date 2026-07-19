@@ -201,6 +201,56 @@ replayBtn.addEventListener("click", () => {
   promptEl.classList.add("visible");
 });
 
+/* ---------- Countdown iniziale (hype!) ---------- */
+const BIRTHDAY = new Date(2026, 6, 20, 0, 0, 0, 0); // 20 luglio 2026, ore 00:00 (ora locale)
+const countdownStage = document.getElementById("stage-countdown");
+const cdDays = document.getElementById("cd-days");
+const cdHours = document.getElementById("cd-hours");
+const cdMins = document.getElementById("cd-mins");
+const cdSecs = document.getElementById("cd-secs");
+const cdGrid = document.getElementById("countdown");
+const cdArrived = document.getElementById("cd-arrived");
+const openGiftBtn = document.getElementById("open-gift");
+let cdInterval = null;
+
+function pad2(n) { return String(n).padStart(2, "0"); }
+
+function goToCake() {
+  countdownStage.classList.add("hidden");
+  stageCake.classList.remove("hidden");
+}
+
+function showGiftButton() {
+  if (cdGrid) cdGrid.classList.add("hidden");
+  if (cdArrived) cdArrived.classList.remove("hidden");
+  openGiftBtn.classList.remove("hidden");
+}
+
+function tickCountdown() {
+  const diff = BIRTHDAY - new Date();
+  if (diff <= 0) {
+    if (cdInterval) clearInterval(cdInterval);
+    cdDays.textContent = cdHours.textContent = cdMins.textContent = cdSecs.textContent = "00";
+    showGiftButton();
+    return;
+  }
+  const s = Math.floor(diff / 1000);
+  cdDays.textContent  = pad2(Math.floor(s / 86400));
+  cdHours.textContent = pad2(Math.floor((s % 86400) / 3600));
+  cdMins.textContent  = pad2(Math.floor((s % 3600) / 60));
+  cdSecs.textContent  = pad2(s % 60);
+}
+
+openGiftBtn.addEventListener("click", goToCake);
+
+// all'apertura: se il compleanno è già passato → dritto alla torta, altrimenti mostra il countdown
+if (new Date() >= BIRTHDAY) {
+  goToCake();
+} else {
+  tickCountdown();
+  cdInterval = setInterval(tickCountdown, 1000);
+}
+
 /* ---------- BONUS: soffio nel microfono (attivo solo da "ready") ---------- */
 async function setupMic() {
   if (micStream || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;

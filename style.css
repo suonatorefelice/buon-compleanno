@@ -52,7 +52,84 @@ body {
 }
 
 .stage { animation: fadeUp 0.6s ease; }
-.hidden { display: none; }
+.hidden { display: none !important; }
+
+/* ===== Countdown iniziale ===== */
+.cd-eyebrow {
+  font-family: "Poppins", system-ui, sans-serif;
+  font-size: clamp(.95rem, 3.8vw, 1.15rem);
+  font-weight: 600;
+  letter-spacing: .5px;
+  color: rgba(255,255,255,.85);
+  text-shadow: 0 2px 14px rgba(0,0,0,.5);
+}
+.cd-name {
+  margin-top: 4px;
+  font-family: "Playfair Display", Georgia, serif;
+  font-style: italic;
+  font-weight: 800;
+  font-size: clamp(2.6rem, 12vw, 4rem);
+  line-height: 1.1;
+  color: var(--gold);
+  text-shadow: 0 4px 26px rgba(0,0,0,.6);
+}
+.countdown {
+  display: flex;
+  justify-content: center;
+  gap: clamp(8px, 3vw, 18px);
+  margin-top: 32px;
+}
+.cd-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: clamp(60px, 18vw, 88px);
+  padding: 16px 6px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 16px;
+  backdrop-filter: blur(6px);
+}
+.cd-num {
+  font-family: "Poppins", system-ui, sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.8rem, 8vw, 2.8rem);
+  line-height: 1;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.cd-label {
+  margin-top: 8px;
+  font-family: "Poppins", system-ui, sans-serif;
+  font-size: clamp(.62rem, 2.6vw, .78rem);
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.65);
+}
+.cd-arrived {
+  margin-top: 26px;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(1.4rem, 6vw, 2rem);
+  color: #fff;
+  text-shadow: 0 3px 20px rgba(0,0,0,.6);
+  animation: fadeUp 0.7s ease;
+}
+.open-gift {
+  margin-top: 34px;
+  padding: 16px 34px;
+  font-family: "Poppins", system-ui, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #3a0a10;
+  background: linear-gradient(180deg, #ffe08a, var(--gold));
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 8px 26px rgba(255, 206, 84, .35);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+.open-gift:active { transform: translateY(2px); }
 
 /* ===== TORTA (SVG) ===== */
 .cake {
