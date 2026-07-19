@@ -113,16 +113,26 @@ function startSequence() {
   song.currentTime = 0;
   song.play().catch(() => {});
 
-  // "sblocca" gli applausi ora (col tocco) in MUTO: iOS ignora volume=0 ma rispetta muted,
-  // così non si sente nessun applauso anticipato durante la canzone
+  // "sblocca" gli applausi ora (col tocco) senza farli sentire.
+  // iOS a volte lascia sfuggire un istante di suono anche in muto: per evitarlo
+  // spostiamo la riproduzione ALLA FINE del file, così l'eventuale istante è vuoto.
   try {
     applause.muted = true;
+    applause.volume = 0;
+    const seekToEnd = () => {
+      try {
+        if (isFinite(applause.duration) && applause.duration > 0.05) {
+          applause.currentTime = applause.duration - 0.02;
+        }
+      } catch (e) {}
+    };
+    seekToEnd();
     applause.play().then(() => {
       applause.pause();
       applause.currentTime = 0;
       applause.muted = false;
       applause.volume = 0.8;
-    }).catch(() => { applause.muted = false; });
+    }).catch(() => { applause.muted = false; applause.volume = 0.8; });
   } catch (e) {}
 
   setupMic(); // chiede il microfono ora (gesto utente); soffio attivo solo da "ready"
