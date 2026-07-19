@@ -276,8 +276,11 @@ function tickCountdown() {
 
 openGiftBtn.addEventListener("click", goToCake);
 
-// all'apertura: se il compleanno è già passato → dritto alla torta, altrimenti mostra il countdown
-if (new Date() >= BIRTHDAY) {
+// link di prova: con ?prova (o ?skip) nell'indirizzo si salta il countdown per testare la torta
+const SKIP_COUNTDOWN = /[?&](prova|skip)\b/i.test(location.search);
+
+// all'apertura: se è arrivato il momento (o è un link di prova) → dritto alla torta, altrimenti countdown
+if (SKIP_COUNTDOWN || new Date() >= BIRTHDAY) {
   goToCake();
 } else {
   // nel countdown mostriamo i palloncini al posto dei coriandoli
